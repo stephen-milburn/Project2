@@ -4,10 +4,10 @@ import styled from '@emotion/styled';
 import { Card, CardMedia } from "@mui/material";
 import { Col, Row } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+// import { Wave } from "react-animated-text";
 
-const Home = () => {
+const ShinyHome = () => {
     const { pokemonData,
             handleNextButton,
             handlePreviousButton,
@@ -29,7 +29,17 @@ const Home = () => {
         width: "250px",
         height: "400px"
     });
-
+// const Wave2 = () => (
+//   <div
+//     style={{
+//       fontFamily: "Pokemon Solid",
+//       color: "#ffc107",
+//       fontSize: "20px",
+//     }}
+//   >
+//     <Wave text={capString(pokemon.name)} effect="fadeOut" effectChange={5.0} />
+//   </div>
+// );
 
   return (
     <>
@@ -50,22 +60,20 @@ const Home = () => {
                       await setSelectedUrl(
                         `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
                       );
-                      navigate(`/pokemon/${pokemon.name}`);
+                      navigate(`/pokemon/shiny/${pokemon.name}`);
                     }}
-                    src={
-                      pokemon.sprites.other["official-artwork"].front_default
-                    }
+                    src={pokemon.sprites.other["official-artwork"].front_shiny}
                     alt={pokemon.name}
                     style={{ width: "100%" }}
                   />
                 </CardMedia>
+                {/* <Wave2/> */}
                 <h3 style={{ fontFamily: "Pokemon Solid" }}>
                   {capString(pokemon.name)}
                 </h3>
-                <p>Price: ${priceOfPokemon(pokemon.stats)}</p>
-
+                <p>Price: ${priceOfPokemon(pokemon.stats) * 1000}</p>
+                {/* <p>Price: More than yo broke ahh can afford.</p> */}
                 <button
-
                   onClick={() => {
                     handleAddToCart(pokemon);
                     console.log("clicked on Add to Cart");
@@ -76,8 +84,9 @@ const Home = () => {
                   Add to Cart
                 </button>
                 <button
-                onClick={() => {
-                  handleAddToFavorites(pokemon)}}
+                  onClick={() => {
+                    handleAddToFavorites(pokemon);
+                  }}
                   className="btn btn-warning my-2 btn-sm"
                   style={{ fontWeight: 500 }}
                 >
@@ -111,4 +120,4 @@ const Home = () => {
 }
 
 
-export default Home;
+export default ShinyHome;

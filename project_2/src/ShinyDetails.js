@@ -4,8 +4,9 @@ import { Card, CardMedia } from "@mui/material";
 import { Col, Row } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
+import { Wave } from "react-animated-text";
 
-const Details = () => {
+const ShinyDetails = () => {
   const { selectedPokemon, capString, priceOfPokemon, returnToMarket, selectedUrl, handleAddToCarttotal } = useContext(DetailsContext);
   // const [ selectedPoke, setSelectedPoke ] = useState(() => {
   //   const savedInfo = localStorage.getItem('selectedPoke');
@@ -28,12 +29,26 @@ const Details = () => {
     // if (savedPokeData) setSelectedPokemon(JSON.parse(savedPokeData))
   }, [])
 
+const Wave1 = () => (
+  <div style={{ fontFamily: "Pokemon Solid", color: "#ffc107", marginTop:"70px", fontSize:"50px"}}>
+    <Wave
+      text={capString(selectedPokemon.name)}
+      effect="fadeOut"
+      effectChange={5.0}
+    />
+
+    <div></div>
+  </div>
+);
+
+
   return (
     <>
       <link
         href="https://fonts.cdnfonts.com/css/pokemon-solid"
         rel="stylesheet"
       />
+
       <button
         className="pokemon-button btn btn-dark mt-4"
         style={{ float: "Left" }}
@@ -41,35 +56,30 @@ const Details = () => {
       >
         Back to Pokémon Black Market
       </button>
-      <Row>
-        <Col xs={6} style={{ marginTop: "60px" }}>
+      <Row style={{ marginTop: "30px" }}>
+        <Col xs={6} style={{ marginTop: "80px" }}>
           <CardMedia style={{ width: "100%" }}>
             <img
               height="150px"
-              src={selectedPokemon.sprites.other["showdown"].front_default}
+              src={selectedPokemon.sprites.other["showdown"].front_shiny}
               alt={selectedPokemon.name}
             />
           </CardMedia>
         </Col>
         <Col xs={6}>
-          <h1 style={{ fontFamily: "Pokemon Solid" }}>
-            {" "}
-            {capString(selectedPokemon.name)}{" "}
-          </h1>
-          <p>Price: ${priceOfPokemon(selectedPokemon.stats)}</p>
+          <Wave1 />
+          <p>Price: ${priceOfPokemon(selectedPokemon.stats) * 1000}</p>
           <h4> Height: {selectedPokemon.height} m</h4>
           <h4> Weight: {selectedPokemon.weight} kg</h4>
           <h4>
             {`Type: ${selectedPokemon.types
               .map((pokeType) => capString(pokeType.type.name))
-              .join(" / ")}`
-            }
+              .join(" / ")}`}
           </h4>
         </Col>
       </Row>
       <Row>
         <Col xs={12}>
-
           {selectedPokemon.name}'s moves:
           <ul
             style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)" }}
@@ -84,4 +94,4 @@ const Details = () => {
   );
 }
 
-export default Details;
+export default ShinyDetails;

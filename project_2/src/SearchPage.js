@@ -1,15 +1,12 @@
-import React from 'react';
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { DetailsContext } from './DetailsContext.js';
 import { useNavigate } from 'react-router-dom';
-import App from './App';
 import { Card, CardMedia } from "@mui/material";
 import { Col, Row } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 const SearchPage = () => {
-    const { searchInput, searchedUrl, capString, priceOfPokemon } = useContext(DetailsContext)
+    const { searchInput, searchedUrl, capString, priceOfPokemon, returnToMarket } = useContext(DetailsContext)
     const navigate = useNavigate();
     const [ searchPoke, setSearchPoke ] = useState(() => {
       const savedInfo = localStorage.getItem('searchPoke');
@@ -21,7 +18,6 @@ const SearchPage = () => {
             let response = await fetch(searchedUrl);
             let data = await response.json();
             setSearchPoke(data);
-            // localStorage.setItem('searchPoke', JSON.stringify(data))
             localStorage.setItem('searchPoke', JSON.stringify(data));
         }
         fetchSearchedPokemon();
@@ -32,10 +28,6 @@ const SearchPage = () => {
         const savedPokeData = localStorage.getItem('searchPoke')
         if (savedPokeData) setSearchPoke(JSON.parse(savedPokeData))
     }, [])
-
-    const returnToMarket = () => {
-        navigate('/');
-    }
 
     return (
         <>

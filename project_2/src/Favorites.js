@@ -41,9 +41,9 @@ const Favorites = () => {
         href="https://fonts.cdnfonts.com/css/pokemon-solid"
         rel="stylesheet"
       />
-    <h1>Your Favorite Pokémon</h1>
+    <h1 style={{marginLeft:"20px", marginTop:'20px'}}>Your Favorite Pokémon's</h1>
     <div>
-      <Row>
+      <Row style={{marginLeft:'10px'}}>
       { favorites.length > 0 ?
         favorites.map((pokemon, index) => {
           return (
@@ -52,7 +52,7 @@ const Favorites = () => {
                 key={index}>
                 <CardMedia>
                   <img
-                    src={ pokemon.sprites.other["showdown"].front_default }
+                    src={ pokemon.sprites.other["official-artwork"].front_default }
                     alt={ pokemon.name }
                     style={{ width: "auto", height: "200px" }}
                     onClick={() => {
@@ -77,18 +77,18 @@ const Favorites = () => {
                 >
                   Remove from Favorites
                 </button>
-                <button
+                {/* <button
                   className="btn btn-warning my-2 btn-sm"
                   style={{ fontWeight: 500 }}
                 >
                   Add to Favorites
-                </button>
+                </button> */}
               </StyledCard>
             </Col>
           );
         })
         :
-        <h1>No Favorite Pokémon? Boo.</h1>
+        <h1 style={{marginLeft:'30%', marginTop:'30px'}}>No Favorite Pokémon? Boo.</h1>
     }
       </Row>
       {/* <Row>

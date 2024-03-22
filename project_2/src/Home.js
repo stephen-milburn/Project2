@@ -88,19 +88,21 @@ const Home = () => {
           );
         })}
       </Row>
-      <Row>
+      <Row style={{marginBottom:'20px'}}>
         <Col key="previous" xs={6}>
           <button
+            style={{marginLeft:'20px'}}
             onClick={handlePreviousButton}
-            className="btn btn-dark my-2 btn-sm"
+            className="btn btn-dark my-2 btn-lg"
           >
             Previous
           </button>
         </Col>
         <Col key="next" xs={6} style={{ textAlign: "right" }}>
           <button
+            style={{marginRight:'20px'}}
             onClick={handleNextButton}
-            className="btn btn-dark my-2 btn-sm"
+            className="btn btn-dark my-2 btn-lg"
           >
             Next
           </button>

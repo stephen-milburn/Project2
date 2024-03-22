@@ -55,9 +55,9 @@ const Cart = () => {
         href="https://fonts.cdnfonts.com/css/pokemon-solid"
         rel="stylesheet"
       />
-    <h1>Your Cart</h1>
+    <h1 style={{marginLeft:"20px", marginTop:'20px'}}>Your Cart</h1>
     <div>
-      <Row>
+      <Row style={{marginLeft:'10px'}}>
       { pokemonCart.length > 0 ?
         pokemonCart.map((pokemon, index) => {
           return (
@@ -66,7 +66,7 @@ const Cart = () => {
                 key={index}>
                 <CardMedia>
                   <img
-                    src={ pokemon.sprites.other["showdown"].front_default }
+                    src={ pokemon.sprites.other["official-artwork"].front_default }
                     alt={ pokemon.name }
                     style={{ width: "auto", height: "200px" }}
                     onClick={() => {
@@ -105,15 +105,16 @@ const Cart = () => {
           );
         })
         :
-        <h1>Cart is Empty</h1>
+        <h1 style={{marginLeft:'35%'}}>Cart is Empty</h1>
     }
       </Row>
       <Row>
         <Col>
-          <h2> Your Total: ${totalPrice} </h2>
-          <button
+          <h2 style={{marginLeft:"20px", marginTop:'20px'}}> Your Total: ${totalPrice} </h2>
+            <button
+              style={{marginLeft:'25px'}}
           onClick={() => navigate('/checkout')}
-          className="btn btn-dark my-2 btn-sm"
+          className="btn btn-dark my-2 btn-lg"
           > Checkout
           </button>
         </Col>

@@ -36,41 +36,41 @@ const Details = () => {
       />
       <button
         className="pokemon-button btn btn-dark mt-4"
-        style={{ float: "Left" }}
+        style={{ float: "right", marginRight:'10px' }}
         onClick={returnToMarket}
       >
         Back to Pokémon Black Market
       </button>
-      <Row>
-        <Col xs={6} style={{ marginTop: "60px" }}>
-          <CardMedia style={{ width: "100%" }}>
+      <Row style={{ marginTop: "30px"}}>
+        <Col xs={6} style={{ marginTop: "90px" }}>
+          <CardMedia style={{ width: "100%", marginLeft: '65px'  }}>
             <img
-              height="150px"
+              height="155px"
               src={selectedPokemon.sprites.other["showdown"].front_default}
               alt={selectedPokemon.name}
             />
           </CardMedia>
         </Col>
         <Col xs={6}>
-          <h1 style={{ fontFamily: "Pokemon Solid" }}>
+          <h1 style={{ fontFamily: "Pokemon Solid", marginTop:'70px' }}>
             {" "}
             {capString(selectedPokemon.name)}{" "}
           </h1>
           <p>Price: ${priceOfPokemon(selectedPokemon.stats)}</p>
-          <h4> Height: {selectedPokemon.height} m</h4>
-          <h4> Weight: {selectedPokemon.weight} kg</h4>
-          <h4>
+          <h6> Height: {selectedPokemon.height} m</h6>
+          <h6> Weight: {selectedPokemon.weight} kg</h6>
+          <h6>
             {`Type: ${selectedPokemon.types
               .map((pokeType) => capString(pokeType.type.name))
               .join(" / ")}`
             }
-          </h4>
+          </h6>
         </Col>
       </Row>
-      <Row>
+      <Row style={{marginTop:'35px'}}>
         <Col xs={12}>
 
-          {selectedPokemon.name}'s moves:
+          <h5 style={{marginLeft:'15px'}}>{capString(selectedPokemon.name)}'s moves:</h5>
           <ul
             style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)" }}
           >

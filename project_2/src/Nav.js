@@ -78,7 +78,7 @@ const Nav = () => {
       />
 
       <nav className="navbar navbar-dark bg-dark justify-content-between p-4">
-        <h2
+        <h1
           className="navbar-brand bg-dark mt-2"
           style={{
             fontFamily: "Pokemon Solid",
@@ -89,7 +89,7 @@ const Nav = () => {
           onClick={returnToMarket}
         >
           Pokémon Black Market
-        </h2>
+        </h1>
         <button
             className="btn btn-warning my-2 my-sm-0"
             type="submit"

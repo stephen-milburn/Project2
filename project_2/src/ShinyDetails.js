@@ -34,7 +34,7 @@ const Wave1 = () => (
     <Wave
       text={capString(selectedPokemon.name)}
       effect="fadeOut"
-      effectChange={5.0}
+      effectChange={6.0}
     />
 
     <div></div>
@@ -51,16 +51,16 @@ const Wave1 = () => (
 
       <button
         className="pokemon-button btn btn-dark mt-4"
-        style={{ float: "Left" }}
+        style={{ float: "right", marginRight:'10px' }}
         onClick={returnToMarket}
       >
         Back to Pokémon Black Market
       </button>
-      <Row style={{ marginTop: "30px" }}>
+      <Row style={{ marginTop: "30px"}}>
         <Col xs={6} style={{ marginTop: "80px" }}>
-          <CardMedia style={{ width: "100%" }}>
+          <CardMedia style={{ width: "100%", marginLeft: '65px' }}>
             <img
-              height="150px"
+              height="155px"
               src={selectedPokemon.sprites.other["showdown"].front_shiny}
               alt={selectedPokemon.name}
             />
@@ -69,18 +69,18 @@ const Wave1 = () => (
         <Col xs={6}>
           <Wave1 />
           <p>Price: ${priceOfPokemon(selectedPokemon.stats) * 1000}</p>
-          <h4> Height: {selectedPokemon.height} m</h4>
-          <h4> Weight: {selectedPokemon.weight} kg</h4>
-          <h4>
+          <h6> Height: {selectedPokemon.height} m</h6>
+          <h6> Weight: {selectedPokemon.weight} kg</h6>
+          <h6>
             {`Type: ${selectedPokemon.types
               .map((pokeType) => capString(pokeType.type.name))
               .join(" / ")}`}
-          </h4>
+          </h6>
         </Col>
       </Row>
       <Row>
         <Col xs={12}>
-          {selectedPokemon.name}'s moves:
+          <h5 style={{marginLeft:'15px'}}>{capString(selectedPokemon.name)}'s moves:</h5>
           <ul
             style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)" }}
           >

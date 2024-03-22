@@ -16,7 +16,53 @@ const DetailsProvider = ({ children}) => {
     const [ searchedUrl, setSearchedUrl] = useState(``);
     const [ pokemonCart, setPokemonCart ] = useState([]);
     const [ selectedUrl, setSelectedUrl ] = useState('');
-    const [ favorites, setFavorites ] = useState([])
+    const [ favorites, setFavorites ] = useState([]);
+    const [ shinyPokemonCart, setShinyPokemonCart ] = useState([]);
+    const [ shinyFavorites, setShinyFavorites ] = useState([]);
+    const [ selectedImage, setSelectedImage ] = useState('');
+
+    const getColorForType = (type) => {
+        switch (type) {
+          case "normal" :
+            return "#BABAAE";
+          case "fighting" :
+            return "#A75543";
+          case "flying" :
+            return "#78A2FF";
+          case "poison" :
+            return "#A95CA0";
+          case "ground" :
+            return "#EECC55";
+          case "rock" :
+            return "#CCBD72";
+          case "bug" :
+            return "#C2D21E";
+          case "ghost" :
+            return "#7975D7";
+          case "steel" :
+            return "#C4C2DB";   
+          case "fire" :
+            return "#FA5643";
+          case "water" :
+            return "#56ADFF";
+          case "grass" :
+            return "#8CD750";
+          case "electric" :
+            return "#FDE139";
+          case "psychic" :
+            return "#FA65B4";
+          case "ice" :
+            return "#96F1FF";
+          case "dragon" :
+            return "#8673FF";
+          case "dark" :
+            return "#8D6855";
+          case "fairy" :
+            return "#F9AEFF";
+          default:
+            return "lightgrey"; // Default color if type not found
+        }
+    };
 
     const navigate = useNavigate();
 
@@ -26,6 +72,10 @@ const DetailsProvider = ({ children}) => {
 
     const returnToMarket = () => {
         navigate('/');
+    }
+
+    const returnToShinyMarket = () => {
+        navigate('/shiny');
     }
 
     const handlePokemonClick = (pokemon) => {
@@ -52,7 +102,19 @@ const DetailsProvider = ({ children}) => {
         return priceTotal;
     }
 
-    const handleAddToCart = (pokemon) => {
+    const handleShinyAddToCart = (pokemon) => {
+        if(shinyPokemonCart.length > 0 ) {
+            let pokemonArray = [...shinyPokemonCart];
+            pokemonArray.push(pokemon)
+            setShinyPokemonCart(pokemonArray)
+        } else {
+            let pokemonArray = []
+            pokemonArray.push(pokemon)
+            setShinyPokemonCart(pokemonArray)
+        }
+    }
+
+    const handleAddToCart = (pokemon) => { 
         if(pokemonCart.length > 0 ) {
             let pokemonArray = [...pokemonCart];
             pokemonArray.push(pokemon)
@@ -64,6 +126,11 @@ const DetailsProvider = ({ children}) => {
         }
     }
 
+    const handleShinyRemoveFromCart = (pokemonToRemove) => {
+        const updatedCart = shinyPokemonCart.filter((pokemon) => pokemon.name !== pokemonToRemove.name);
+        setShinyPokemonCart(updatedCart)
+    }
+    
     const handleRemoveFromCart = (pokemonToRemove) => {
         const updatedCart = pokemonCart.filter((pokemon) => pokemon.name !== pokemonToRemove.name);
         setPokemonCart(updatedCart)
@@ -83,10 +150,30 @@ const DetailsProvider = ({ children}) => {
             console.log(`${pokemon.name} added to favorites`)
         }
     }
+    
+    const handleShinyAddToFavorites = (pokemon) => {
+        if(favorites.length > 0 ) {
+            let pokemonArray = [...shinyFavorites];
+            if (!shinyFavorites.some(fav => fav.name === pokemon.name)) {
+                pokemonArray.push(pokemon)
+                setShinyFavorites(pokemonArray)
+            }
+        } else {
+            let pokemonArray = []
+            pokemonArray.push(pokemon)
+            setShinyFavorites(pokemonArray)
+            console.log(`${pokemon.name} added to favorites`)
+        }
+    }
 
     const handleRemoveFromFavorites = (pokemonToRemove) => {
         const updatedCart = favorites.filter((pokemon) => pokemon.name !== pokemonToRemove.name);
         setFavorites(updatedCart)
+    }
+
+    const handleRemoveFromShinyFavorites = (pokemonToRemove) => {
+        const updatedCart = shinyFavorites.filter((pokemon) => pokemon.name !== pokemonToRemove.name);
+        setShinyFavorites(updatedCart)
     }
 
 
@@ -125,6 +212,7 @@ const DetailsProvider = ({ children}) => {
                                               setSearchedUrl,
                                               priceOfPokemon,
                                               returnToMarket,
+                                              returnToShinyMarket,
                                               pokemonCart,
                                               setPokemonCart,
                                               selectedUrl,
@@ -134,7 +222,18 @@ const DetailsProvider = ({ children}) => {
                                               favorites,
                                               setFavorites,
                                               handleAddToFavorites,
-                                              handleRemoveFromFavorites
+                                              handleRemoveFromFavorites,
+                                              shinyPokemonCart,
+                                              setShinyPokemonCart,
+                                              handleShinyAddToCart,
+                                              handleShinyRemoveFromCart,
+                                              shinyFavorites,
+                                              setShinyFavorites,
+                                              handleShinyAddToFavorites,
+                                              handleRemoveFromShinyFavorites,
+                                              selectedImage,
+                                              setSelectedImage,
+                                              getColorForType
                                             }}
             >
             {

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 const Nav = () => {
-  const { searchInput, setSearchInput, setSearchedUrl, returnToMarket } = useContext(DetailsContext);
+  const { searchInput, setSearchInput, setSearchedUrl, returnToMarket, pokemonCart, shinyPokemonCart, favorites, shinyFavorites } = useContext(DetailsContext);
   const navigate = useNavigate();
   const [ suggestions, setSuggestions ] = useState([]);
   const [ pokemonNameList, setPokemonNameList ] = useState([]);
@@ -27,6 +27,7 @@ const Nav = () => {
     setSearchInput(suggestion);
     navigate(`/search/${suggestion}`);
     setSearchedUrl(`https://pokeapi.co/api/v2/pokemon/${suggestion}`)
+    console.log("suggested pokemon", suggestions);
     //clear after each selection
     setSuggestions([]);
   }
@@ -86,30 +87,31 @@ const Nav = () => {
             textShadow:
               "2px 0 #0075BE, -2px 0 #0075BE, 0 2px #0075BE, 0 -2px #0075BE,1px 1px #0075BE, -1px -1px #0075BE, 1px -1px #0075BE, -1px 1px #0075BE",
           }}
-          onClick={returnToMarket}
+          onClick={() => {
+            returnToMarket();
+            if (shiny) {
+              setShiny(false);
+              setMessage("Shiny Poké 👀");
+            }
+          }}
         >
           Pokémon Black Market
         </h1>
         <button
-            className="btn btn-warning my-2 my-sm-0"
-            type="submit"
-            onClick={() => {
-              shiny ?
-                setMessage("Shiny Poké 👀")
-                  :
-                setMessage("Normal Poké 🤡")
-              shiny ?
-                navigate('/')
-              :
-                navigate('/shiny')
-              setShiny(!shiny);
-            }}>
-            {message}
-          </button>
+          className="btn btn-warning my-2 my-sm-0"
+          type="submit"
+          onClick={() => {
+            shiny ? setMessage("Shiny Poké 👀") : setMessage("Normal Poké 🤡");
+            shiny ? navigate("/") : navigate("/shiny");
+            setShiny(!shiny);
+          }}
+        >
+          {message}
+        </button>
 
         <form
           id="searchFrom"
-          className="form-inline d-flex justify-content-end"
+          className="form-inline d-flex"
           onSubmit={handleSubmit}
         >
           <input
@@ -127,11 +129,9 @@ const Nav = () => {
                 <option key={index} value={name} />
               ))}
             </datalist>
-
           </div>
 
           <div>
-
             {searchInput.trim().length > 0 && (
               <StyledDiv>
                 {loadingSuggestions ? (
@@ -140,7 +140,7 @@ const Nav = () => {
                   first10suggestions.map((suggestion, index) => (
                     <div
                       key={index}
-                      style={{ backgroundColor: "white", padding:"5px" }}
+                      style={{ backgroundColor: "white", padding: "5px" }}
                       className="suggestion-item"
                       onClick={() => typeSuggestion(suggestion)}
                     >
@@ -155,30 +155,61 @@ const Nav = () => {
           <button className="btn btn-warning my-2 my-sm-0" type="submit">
             Search
           </button>
+        </form>
+        <form
+          style={{display: 'inline-block'}}
+          id="cart"
+          className="form-inline d-flex justify-content-end"
+        >
+          <button className="position-relative btn btn-dark btn-sm" style={{marginRight:'20px'}}>
+            {/* <i className="bi bi-cart" style={{backgroundColor:'red'}}></i> */}
+            <svg
+              onClick={(event) => {
+                event.preventDefault();
+                navigate("/cart");
+              }}
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              fill="white"
+              className="bi bi-cart "
+              viewBox="0 0 16 16"
+              
+            >
+              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+            </svg>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {pokemonCart.length > 0 || shinyPokemonCart.length > 0 ? (
+                pokemonCart.length + shinyPokemonCart.length
+              ) : (
+                <></>
+              )}
+            </span>
+          </button>
+          <button className="position-relative btn btn-dark btn-sm">
           <svg
-            onClick={() => navigate('/cart')}
+            onClick={(event) => {
+              event.preventDefault();
+              navigate("/favorites");
+            }}
             xmlns="http://www.w3.org/2000/svg"
-            width="40"
-            height="40"
-            fill="white"
-            className="bi bi-cart"
-            viewBox="0 0 16 16"
-            style={{ marginLeft: "25px" }}
-          >
-            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
-          </svg>
-          <svg
-            onClick={() => navigate('/favorites')}
-            xmlns="http://www.w3.org/2000/svg"
-            width="35"
-            height="35"
+            width="30"
+            height="30"
             fill="white"
             className="bi bi-heart"
             viewBox="0 0 16 16"
-            style={{ marginLeft: "25px", marginTop: "4px" }}
+            style={{ marginLeft: "5px", marginTop: "4px" }}
           >
             <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
           </svg>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {favorites.length > 0 || shinyFavorites.length > 0 ? (
+                favorites.length + shinyFavorites.length
+              ) : (
+                <></>
+              )}
+            </span>
+          </button>
         </form>
       </nav>
     </header>

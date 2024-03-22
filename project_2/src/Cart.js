@@ -16,7 +16,10 @@ const Cart = () => {
           setPokemonCart,
           handlePokemonClick,
           handleRemoveFromCart,
-          handleAddToFavorites
+          handleAddToFavorites,
+          shinyPokemonCart,
+          handleShinyRemoveFromCart,
+          getColorForType
          } = useContext(DetailsContext);
 
   const navigate = useNavigate();
@@ -34,15 +37,14 @@ const Cart = () => {
 
   const sumPrices = () => {
     let sum = 0;
-    pokemonCart.forEach(pokemon => {
-        sum += priceOfPokemon(pokemon.stats);
-    });
+    if (pokemonCart.length > 0) pokemonCart.forEach(pokemon => sum += priceOfPokemon(pokemon.stats));
+    if (shinyPokemonCart.length > 0) shinyPokemonCart.forEach(pokemon => sum += (priceOfPokemon(pokemon.stats) * 1000));
     setTotalPrice(sum);
   };
 
   useEffect( () => {
     sumPrices();
-  }, [pokemonCart])
+  }, [pokemonCart, shinyPokemonCart])
 
   // const checkout = () => {
   //   console.log('test checkout');
@@ -58,55 +60,108 @@ const Cart = () => {
     <h1 style={{marginLeft:"20px", marginTop:'20px'}}>Your Cart</h1>
     <div>
       <Row style={{marginLeft:'10px'}}>
-      { pokemonCart.length > 0 ?
-        pokemonCart.map((pokemon, index) => {
-          return (
-            <Col key={pokemon.name} xs={3}>
-              <StyledCard
-                key={index}>
-                <CardMedia>
-                  <img
-                    src={ pokemon.sprites.other["official-artwork"].front_default }
-                    alt={ pokemon.name }
-                    style={{ width: "auto", height: "200px" }}
-                    onClick={() => {
-                        handlePokemonClick(pokemon);
-                        navigate(`/pokemon/${pokemon.name}`);
-                    }}
-                  />
-                </CardMedia>
-                <h3 style={{ fontFamily: "Pokemon Solid" }}>
-                  {capString(pokemon.name)}
-                </h3>
-                <p>
-
-                  Price: $
-                  {priceOfPokemon(pokemon.stats)}
-                </p>
-                <button
-                onClick={() => {
-                  handleRemoveFromCart(pokemon)}}
-                  className="btn btn-warning my-2 btn-sm"
-                  style={{ marginRight: "5px", fontWeight: 500 }}
-                >
-                  Remove from Cart
-                </button>
-                <button
+      {pokemonCart.length > 0 || shinyPokemonCart.length > 0 ? (
+      <>
+          {pokemonCart.map((pokemon, index) => {
+            return (
+              <Col style={{textAlign: 'center'}} key={pokemon.name} xs={3}>
+                <StyledCard
+                  key={index} style={{backgroundColor: getColorForType(pokemon.types[0].type.name)}}>
+                  <CardMedia>
+                    <img
+                      src={ pokemon.sprites.other["official-artwork"].front_default }
+                      alt={ pokemon.name }
+                      style={{ width: "auto", height: "200px" }}
+                      onClick={() => {
+                          handlePokemonClick(pokemon);
+                          navigate(`/pokemon/${pokemon.name}`);
+                      }}
+                    />
+                  </CardMedia>
+                  <h3 style={{ fontFamily: "Pokemon Solid" }}>
+                    {capString(pokemon.name)}
+                  </h3>
+                  <h4>
+                    ${ priceOfPokemon(pokemon.stats)}
+                  </h4>
+                  <button
                   onClick={() => {
-                    handleAddToFavorites(pokemon)
-                  }}
-                  className="btn btn-warning my-2 btn-sm"
-                  style={{ fontWeight: 500 }}
-                >
-                  Add to Favorites
-                </button>
-              </StyledCard>
-            </Col>
-          );
-        })
-        :
-        <h1 style={{marginLeft:'35%'}}>Cart is Empty</h1>
-    }
+                    handleRemoveFromCart(pokemon)}}
+                    className="btn btn-dark my-2 btn-sm"
+                    style={{ marginRight: "5px", fontWeight: 500 }}
+                  >
+                    Remove from Cart
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleAddToFavorites(pokemon)
+                    }}
+                    className="btn btn-dark my-2 btn-sm"
+                    style={{ fontWeight: 500 }}
+                  >
+                    Add to Favorites
+                  </button>
+                </StyledCard>
+              </Col>
+        )})
+      }
+            {shinyPokemonCart.map((pokemon, index) => {
+              return (
+                <Col key={pokemon.name} xs={3} style={{ textAlign: "center" }}>
+                  <StyledCard key={index} style={{backgroundColor: getColorForType(pokemon.types[0].type.name)}}>
+                    <CardMedia>
+                      <img
+                        src={
+                          pokemon.sprites.other["official-artwork"].front_shiny
+                        }
+                        alt={pokemon.name}
+                        style={{ width: "auto", height: "200px" }}
+                        onClick={() => {
+                          handlePokemonClick(pokemon);
+                          navigate(`/pokemon/shiny/:name${pokemon.name}`);
+                        }}
+                      />
+                    </CardMedia>
+                    <h3
+                      style={{
+                        fontFamily: "Pokemon Solid",
+                        color: "#FFBF00",
+                        textShadow:
+                          "2px 0 #000000, -2px 0 #000000, 0 2px #000000, 0 -2px #000000,1px 1px #000000, -1px -1px #000000, 1px -1px #000000, -1px 1px #000000",
+                      }}
+                    >
+                      {capString(pokemon.name)}
+                    </h3>
+                    <h4>${priceOfPokemon(pokemon.stats) * 1000}</h4>
+                    <button
+                      onClick={() => {
+                        handleShinyRemoveFromCart(pokemon);
+                      }}
+                      className="btn btn-dark my-2 btn-sm"
+                      style={{ marginRight: "5px", fontWeight: 500 }}
+                    >
+                      Remove from Cart
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleAddToFavorites(pokemon);
+                      }}
+                      className="btn btn-dark my-2 btn-sm"
+                      style={{ fontWeight: 500 }}
+                    >
+                      Add to Favorites
+                    </button>
+                  </StyledCard>
+                </Col>
+              );
+            })}
+        </>
+      )
+        : (
+        <div>
+          <h1 style={{marginLeft:'35%'}}>Cart is Empty</h1>
+        </div>
+      )}
       </Row>
       <Row>
         <Col>

@@ -23,6 +23,18 @@ const Checkout = () => {
     border: '1px solid black',
   });
 
+  const shakeAnimation = `@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px) rotate(-5deg); }
+    50% { transform: translateX(5px) rotate(5deg); }
+    75% { transform: translateX(-5px) rotate(-5deg); }
+    100% { transform: translateX(0); }
+  }`;
+
+  const ShakingCardMedia = styled(CardMedia)`
+  animation: ${shakeAnimation} 0.5s ease-in-out infinite;
+  `
+  
   return (
     <div>
       <link
@@ -34,7 +46,11 @@ const Checkout = () => {
         <StyledRow>
           <Col xs={8}>
             <CardMedia>
-              <img src="photos/JeffKissyKiss.png" alt="Jeff"/>
+              <ShakingCardMedia>
+              <img src="photos/JeffKissyKiss.png" alt="Jeff"
+              style={{ borderRadius: '10px',
+              marginRight: '15px' }}/>
+              </ShakingCardMedia>
             </CardMedia>
           </Col>
           <Col xs={4} style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
@@ -45,7 +61,11 @@ const Checkout = () => {
         <StyledRow>
           <Col xs={8}>
             <CardMedia>
-              <img src="photos/JeffShows.png" alt="Jeff2"/>
+            <ShakingCardMedia>
+              <img src="photos/JeffShows.png" alt="Jeff2"
+              style={{ borderRadius: '10px',
+              marginRight: '15px' }}/>
+              </ShakingCardMedia>
             </CardMedia>
           </Col>
           <Col xs={4} style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
@@ -63,7 +83,11 @@ const Checkout = () => {
         <StyledRow>
           <Col xs={8}>
             <CardMedia>
-              <img src="photos/JeffPonders.jpg" alt="Jeff2"/>
+            <ShakingCardMedia>
+              <img src="photos/JeffPonders.jpg" alt="Jeff2"
+              style={{ borderRadius: '10px',
+              marginRight: '15px' }}/>/
+              </ShakingCardMedia>
             </CardMedia>
           </Col>
           <Col xs={4} style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
@@ -74,7 +98,11 @@ const Checkout = () => {
         <StyledRow>
           <Col xs={8}>
             <CardMedia>
-              <img src="photos/JeffRubsHands.png" alt="Jeff2" />
+            <ShakingCardMedia>
+              <img src="photos/JeffRubsHands.png" alt="Jeff2" 
+              style={{ borderRadius: '10px',
+              marginRight: '15px' }}/>
+              </ShakingCardMedia>
             </CardMedia>
           </Col>
           <Col xs={4} style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
@@ -85,7 +113,11 @@ const Checkout = () => {
         <StyledRow>
           <Col xs={8}>
             <CardMedia>
-              <img src= "photos/JeffWaves.png" alt="Jeff5" />
+            <ShakingCardMedia>
+              <img src= "photos/JeffWaves.png" alt="Jeff5" 
+              style={{ borderRadius: '10px',
+              marginRight: '15px' }}/>
+              </ShakingCardMedia>
             </CardMedia>
           </Col>
           <Col xs={4} style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>

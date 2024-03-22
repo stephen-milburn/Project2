@@ -17,7 +17,11 @@ const ShinyHome = () => {
             setSelectedUrl,
             handleAddToCart,
             handleAddToFavorites,
-            pokemonCart } = useContext(DetailsContext);
+            pokemonCart,
+            shinyPokemon,
+            handleShinyAddToCart,
+            handleShinyAddToFavorites,
+            getColorForType } = useContext(DetailsContext);
 
     const navigate = useNavigate();
 
@@ -51,7 +55,12 @@ const ShinyHome = () => {
         {pokemonData.map((pokemon, index) => {
           return (
             <Col key={pokemon.name} xs={3}>
-              <StyledCard key={index}>
+              <StyledCard
+                key={index}
+                style={{
+                  backgroundColor: getColorForType(pokemon.types[0].type.name),
+                }}
+              >
                 <CardMedia>
                   <img
                     key={index}
@@ -68,26 +77,34 @@ const ShinyHome = () => {
                   />
                 </CardMedia>
                 {/* <Wave2/> */}
-                <h3 style={{ fontFamily: "Pokemon Solid" }}>
+                <h3
+                  style={{
+                    fontFamily: "Pokemon Solid",
+                    color: "#FFBF00",
+                    textShadow:
+                      "2px 0 #000000, -2px 0 #000000, 0 2px #000000, 0 -2px #000000,1px 1px #000000, -1px -1px #000000, 1px -1px #000000, -1px 1px #000000",
+                  }}
+                >
                   {capString(pokemon.name)}
                 </h3>
-                <p>Price: ${priceOfPokemon(pokemon.stats) * 1000}</p>
-                {/* <p>Price: More than yo broke ahh can afford.</p> */}
+                <h4 style={{ textAlign: "center" }}>
+                  ${priceOfPokemon(pokemon.stats) * 1000}
+                </h4>
                 <button
                   onClick={() => {
-                    handleAddToCart(pokemon);
+                    handleShinyAddToCart(pokemon);
                     console.log("clicked on Add to Cart");
                   }}
-                  className="btn btn-warning my-2 btn-sm"
+                  className="btn btn-dark my-2 btn-sm"
                   style={{ marginRight: "5px", fontWeight: 500 }}
                 >
                   Add to Cart
                 </button>
                 <button
                   onClick={() => {
-                    handleAddToFavorites(pokemon);
+                    handleShinyAddToFavorites(pokemon);
                   }}
-                  className="btn btn-warning my-2 btn-sm"
+                  className="btn btn-dark my-2 btn-sm"
                   style={{ fontWeight: 500 }}
                 >
                   Add to Favorites

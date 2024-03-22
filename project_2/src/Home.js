@@ -6,6 +6,7 @@ import { Col, Row } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import './Type.css'
 
 const Home = () => {
     const { pokemonData,
@@ -17,19 +18,18 @@ const Home = () => {
             setSelectedUrl,
             handleAddToCart,
             handleAddToFavorites,
-            pokemonCart } = useContext(DetailsContext);
+            pokemonCart,
+            getColorForType } = useContext(DetailsContext);
 
     const navigate = useNavigate();
 
     const StyledCard = styled(Card)({
         margin: "10px",
-        backgroundColor: 'lightgrey',
         padding: "10px",
         border: '1px solid black',
         width: "250px",
         height: "400px"
     });
-
 
   return (
     <>
@@ -41,7 +41,13 @@ const Home = () => {
         {pokemonData.map((pokemon, index) => {
           return (
             <Col key={pokemon.name} xs={3}>
-              <StyledCard key={index}>
+              <StyledCard
+                className={pokemon.types[0].type.name}
+                key={index}
+                style={{
+                  backgroundColor: getColorForType(pokemon.types[0].type.name),
+                }}
+              >
                 <CardMedia>
                   <img
                     key={index}
@@ -59,26 +65,31 @@ const Home = () => {
                     style={{ width: "100%" }}
                   />
                 </CardMedia>
-                <h3 style={{ fontFamily: "Pokemon Solid" }}>
+                <h3
+                  style={{
+                    fontFamily: "Pokemon Solid",
+                     }}
+                >
                   {capString(pokemon.name)}
                 </h3>
-                <p>Price: ${priceOfPokemon(pokemon.stats)}</p>
-
+                <h4 style={{ textAlign: "center" }}>
+                  ${priceOfPokemon(pokemon.stats)}
+                </h4>
                 <button
-
                   onClick={() => {
                     handleAddToCart(pokemon);
                     console.log("clicked on Add to Cart");
                   }}
-                  className="btn btn-warning my-2 btn-sm"
+                  className="btn btn-dark my-2 btn-sm"
                   style={{ marginRight: "5px", fontWeight: 500 }}
                 >
                   Add to Cart
                 </button>
                 <button
-                onClick={() => {
-                  handleAddToFavorites(pokemon)}}
-                  className="btn btn-warning my-2 btn-sm"
+                  onClick={() => {
+                    handleAddToFavorites(pokemon);
+                  }}
+                  className="btn btn-dark my-2 btn-sm"
                   style={{ fontWeight: 500 }}
                 >
                   Add to Favorites

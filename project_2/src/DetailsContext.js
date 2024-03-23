@@ -20,6 +20,7 @@ const DetailsProvider = ({ children}) => {
     const [ shinyPokemonCart, setShinyPokemonCart ] = useState([]);
     const [ shinyFavorites, setShinyFavorites ] = useState([]);
     const [ selectedImage, setSelectedImage ] = useState('');
+    const [ moveDetails, setMoveDetails ] = useState([]);
 
     const getColorForType = (type) => {
         switch (type) {
@@ -233,7 +234,9 @@ const DetailsProvider = ({ children}) => {
                                               handleRemoveFromShinyFavorites,
                                               selectedImage,
                                               setSelectedImage,
-                                              getColorForType
+                                              getColorForType,
+                                              moveDetails,
+                                              setMoveDetails,
                                             }}
             >
             {

@@ -30,7 +30,10 @@ const Details = () => {
           selectedUrl, 
           handleAddToCarttotal,
           setSelectedImage,
-          selectedImage } = useContext(DetailsContext);
+          selectedImage,
+          getColorForType,
+          moveDetails,
+          setMoveDetails } = useContext(DetailsContext);
   // const [ selectedPoke, setSelectedPoke ] = useState(() => {
   //   const savedInfo = localStorage.getItem('selectedPoke');
   //   return savedInfo ? JSON.parse(savedInfo) : {};
@@ -53,6 +56,26 @@ const Details = () => {
     // if (savedPokeData) setSelectedPokemon(JSON.parse(savedPokeData))
   }, [])
 
+  useEffect(() => {
+    const fetchMoveDetails = async() => {
+      const allMoveDetails = [];
+      await Promise.all(selectedPokemon.moves.map(async (pokemonMove, index) => {
+        const response = await fetch(pokemonMove.move.url)
+        const moveData = await response.json()
+        const moveDetail = {
+          name: capString(pokemonMove.move.name),
+          type: moveData.type.name,
+          damageClass: moveData.damage_class.name
+        }
+        allMoveDetails.push(moveDetail)
+      }))
+      // console.log('moveDetails:', allMoveDetails)
+      setMoveDetails(allMoveDetails)
+    }
+    fetchMoveDetails();
+  }, [selectedPokemon.moves])
+
+
   return (
     <div className={selectedPokemon.types[0].type.name}>
       <link
@@ -61,96 +84,114 @@ const Details = () => {
       />
       <button
         className="pokemon-button btn btn-dark "
-        style={{ float: "left", marginLeft: "10px" }}
+        style={{ float: "Left" }}
         onClick={returnToMarket}
       >
         Back to Pokémon Black Market
       </button>
-      <Row
-        className={selectedPokemon.types[0].type.name}
-        
-      >
-        <Col xs={5} style={{ textAlign: "center" }}>
-          <h1 style={{ fontFamily: "Pokemon Solid", marginTop: "70px" }}>
-            {" "}
-            {capString(selectedPokemon.name)}{" "}
-          </h1>
+      <Row className={selectedPokemon.types[0].type.name}>
+        <Col xs={4} style={{ textAlign: "center" }}>
+          <h1 style={{ fontFamily: "Pokemon Solid", marginTop: "110px" }}>{capString(selectedPokemon.name)}</h1>
           <h4>${priceOfPokemon(selectedPokemon.stats)}</h4>
-          <h6>
-            {" "}
-            Height: {selectedPokemon.height / 10} m | Weight:{" "}
-            {selectedPokemon.weight} kg
-          </h6>
-          <h6>
-            {`Type: ${selectedPokemon.types
-              .map((pokeType) => capString(pokeType.type.name))
-              .join(" / ")}`}
-          </h6>
+          <h6>Height: {selectedPokemon.height / 10} m | Weight: {selectedPokemon.weight / 10} kg</h6>
+          <h6>Type: {selectedPokemon.types.map(pokeType => capString(pokeType.type.name)).join(" / ")}</h6>
         </Col>
-        <Col xs={5} style={{ marginTop: "90px" }}>
-          <CardMedia style={{ width: "100%", marginLeft: "55px" }}>
+        <Col xs={4}>
+          <CardMedia style={{ width: "300px", height: "300px", marginLeft: "55px" }}>
             <img
               height="155px"
               src={selectedImage}
               alt={`{selectedPokemon.name} front`}
-            />
+              style={{ width: "300px", height: "300px", objectFit: "contain" }}            />
           </CardMedia>
         </Col>
-        <Col item xs={2} style={{ marginTop: "40px" }}>
-          <Card
-            style={{ marginBottom: "80px" }}
-            onClick={() =>
-              setSelectedImage(
-                selectedPokemon.sprites.other["showdown"].front_default
-              )
-            }
+        <Col xs={4} style={{ marginTop: "40px", background: getColorForType(selectedPokemon.types[0].type.name)}}>
+          <Card style={{ marginBottom: "50px", width: '100px', height: '100px', background: getColorForType(selectedPokemon.types[0].type.name)}}
+                onClick={() => setSelectedImage(selectedPokemon.sprites.other["showdown"].front_default)}
           >
-            <CardMedia style={{ width: "100%", marginLeft: "40px" }}>
+            <CardMedia style={{border: "1px solid black"}}>
               <img
                 src={selectedPokemon.sprites.other["showdown"].front_default}
                 alt={`${selectedPokemon.name} back`}
-              />
+                style={{ width: "100px", height: "100px", objectFit: "contain" }}              />
             </CardMedia>
           </Card>
           <Card
-            style={{}}
-            onClick={() =>
-              setSelectedImage(
-                selectedPokemon.sprites.other["showdown"].back_default
-              )
-            }
+            onClick={() => setSelectedImage(selectedPokemon.sprites.other["showdown"].back_default)}
+            style={{width: '100px', height: '100px', background: getColorForType(selectedPokemon.types[0].type.name)}}
           >
-            <CardMedia style={{ width: "100%", marginLeft: "40px" }}>
+            <CardMedia style={{border: "1px solid black"}}>
               <img
                 src={selectedPokemon.sprites.other["showdown"].back_default}
                 alt={`${selectedPokemon.name} back`}
+                style={{ width: "100px", height: "100px", objectFit: "contain" }}
               />
             </CardMedia>
           </Card>
         </Col>
       </Row>
-      <Row
-        className={selectedPokemon.types[0].type.name}
-        style={{ marginTop: "35px" }}
+      <Row className={selectedPokemon.types[0].type.name}
+           style={{ marginTop: "35px" }}
       >
-        <Col xs={12}>
-          <h5 style={{ marginLeft: "15px" }}>
-            {capString(selectedPokemon.name)}'s moves:
-          </h5>
-          <Card
-            
-            style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)" }}
-          >
-            {selectedPokemon.moves.map((pokemonMoves, index) => {
-              return (
-                <Card style={{ textAlign: "center" }}
-                      key={index}
-                >
-                  {capString(pokemonMoves.move.name)}
-                </Card>
-              );
-            })}
-          </Card>
+        <Col xs={12} style={{textAlign: 'center'}}>
+          <h4 style={{ marginLeft: "15px" }}>{capString(selectedPokemon.name)}'s Moveset:</h4>
+          {
+            moveDetails.length > 0 ?
+            <Row>
+                  <Col xs={4} className='physical' style={{textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <h5>Physical Moves</h5>
+                    {moveDetails.map((pokemonMove, index) => (
+                    <>
+                      {
+                        pokemonMove.damageClass == 'physical' ?
+                          <Card style={{ textAlign: "center", background: getColorForType(pokemonMove.type), width: "200px", height: "30px", border: "1px solid black" }}
+                                key={index}
+                          >
+                            {pokemonMove.name}
+                          </Card>
+                          :
+                          <></>
+                      }
+                    </>
+                    ))}
+                  </Col>
+                  <Col xs={4} className='special' style={{textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <h5>Special Moves</h5>
+                    {moveDetails.map((pokemonMove, index) => (
+                    <>
+                      {
+                        pokemonMove.damageClass == 'special' ?
+                        <Card style={{ textAlign: "center", background: getColorForType(pokemonMove.type), width: "200px", height: "30px", border: "1px solid black" }}
+                                key={index}
+                          >
+                            {pokemonMove.name}
+                          </Card>
+                          :
+                          <></>
+                      }
+                    </>
+                    ))}
+                  </Col>
+                  <Col xs={4} className='status' style={{textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <h5>Status Moves</h5>
+                    {moveDetails.map((pokemonMove, index) => (
+                    <>
+                      {
+                        pokemonMove.damageClass == 'status' ?
+                        <Card style={{ textAlign: "center", background: getColorForType(pokemonMove.type), width: "200px", height: "30px", border: "1px solid black" }}
+                                key={index}
+                          >
+                            {pokemonMove.name}
+                          </Card>
+                          :
+                          <></>
+                      }
+                    </>
+                    ))}
+                  </Col>
+            </Row> :
+          <>LOADING MOVESET</>
+          }
         </Col>
       </Row>
     </div>

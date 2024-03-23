@@ -4,7 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 const Nav = () => {
-  const { searchInput, setSearchInput, setSearchedUrl, returnToMarket, pokemonCart, shinyPokemonCart, favorites, shinyFavorites } = useContext(DetailsContext);
+  const { searchInput, 
+          setSearchInput, 
+          setSearchedUrl, 
+          returnToMarket, 
+          pokemonCart, 
+          shinyPokemonCart, 
+          favorites, 
+          shinyFavorites,
+          capString } = useContext(DetailsContext);
   const navigate = useNavigate();
   const [ suggestions, setSuggestions ] = useState([]);
   const [ pokemonNameList, setPokemonNameList ] = useState([]);
@@ -36,12 +44,11 @@ const Nav = () => {
   const StyledDiv = styled.div`
     position: absolute;
     top: 75px;
-    right: 200px;
+    right: 435px;
     maxHeight: 300px;
-    width: 250px;
+    width: 205px;
     overflowX: auto;
-    background-color: red;
-    border: 1px solid #ccc;
+    background-color: white;
     border-radius: 5px;
     padding: 5px;
     z-index: 999;
@@ -144,7 +151,7 @@ const Nav = () => {
                       className="suggestion-item"
                       onClick={() => typeSuggestion(suggestion)}
                     >
-                      {suggestion}
+                      {capString(suggestion)}
                     </div>
                   ))
                 )}

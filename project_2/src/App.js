@@ -8,6 +8,7 @@ import ShinyDetails from './ShinyDetails.js'
 import Cart from './Cart.js';
 import Favorites from './Favorites.js';
 import SearchPage from './SearchPage.js';
+import ShinySearchPage from './ShinySearchPage.js'
 import Checkout from './Checkout.js'
 import Nav from './Nav.js';
 
@@ -16,7 +17,6 @@ function App() {
     <Router>
       <DetailsProvider>
         <Nav />
-
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shiny" element={<ShinyHome />} />

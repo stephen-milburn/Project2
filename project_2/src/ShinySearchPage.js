@@ -3,39 +3,25 @@ import { DetailsContext } from './DetailsContext.js';
 import { Card, CardMedia } from "@mui/material";
 import { Col, Row } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Type.css'
 import { useNavigate } from 'react-router-dom';
+import { Wave } from "react-animated-text";
 
-
-const Details = () => {
-
-  // const TYPES = [
-  //   "bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying",
-  //   "ghost", "grass", "ground", "ice", "normal", "poison", "psychic",
-  //   "rock", "steel", "water"
-  // ];
-
-  // const typeButtons = () => {
-  //   return TYPES.map(type => (
-  //       <button className={`type-button ${type}`} onClick={() => handleFilterByType(type)}>
-  //           {capString(type)}
-  //       </button>
-  //   ))
-  // }
-
-  const { selectedPokemon, 
+const ShinySearchPage = () => {
+  const { searchPoke,
+          setSearchPoke, 
           capString, 
           priceOfPokemon, 
-          returnToMarket, 
+          returnToShinyMarket, 
           selectedUrl, 
+          searchedUrl,
           handleAddToCarttotal,
           setSelectedImage,
           selectedImage,
-          getColorForType,
           moveDetails,
           setMoveDetails,
-          handleAddToCart,
-          handleAddToFavorites } = useContext(DetailsContext);
+          getColorForType,
+          handleShinyAddToCart,
+          handleShinyAddToFavorites } = useContext(DetailsContext);
   // const [ selectedPoke, setSelectedPoke ] = useState(() => {
   //   const savedInfo = localStorage.getItem('selectedPoke');
   //   return savedInfo ? JSON.parse(savedInfo) : {};
@@ -44,26 +30,28 @@ const Details = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSelectedPokemon = async () => {
-        let response = await fetch(selectedUrl);
+    const fetchsearchPoke = async () => {
+        let response = await fetch(searchedUrl);
         let data = await response.json();
+        setSearchPoke(data)
         console.log(data);
-        localStorage.setItem('selectedPokemon', JSON.stringify(data));
+        // localStorage.setItem('searchPoke', JSON.stringify(data));
     }
-    fetchSelectedPokemon();
-    setSelectedImage(selectedPokemon.sprites.other["showdown"].front_default)
-  }, [selectedUrl]);
+    fetchsearchPoke();
+  }, [searchedUrl]);
 
   useEffect( () => {
     console.log("Selected URL", selectedUrl)
-    // const savedPokeData = localStorage.getItem('selectedPokemon')
-    // if (savedPokeData) setSelectedPokemon(JSON.parse(savedPokeData))
+    // const savedPokeData = localStorage.getItem('searchPoke')
+    // if (savedPokeData) setsearchPoke(JSON.parse(savedPokeData))
+    setSelectedImage(searchPoke.sprites.other["showdown"].front_shiny)
+    console.log("search poke", searchPoke)
   }, [])
 
   useEffect(() => {
     const fetchMoveDetails = async() => {
       const allMoveDetails = [];
-      await Promise.all(selectedPokemon.moves.map(async (pokemonMove, index) => {
+      await Promise.all(searchPoke.moves.map(async pokemonMove => {
         const response = await fetch(pokemonMove.move.url)
         const moveData = await response.json()
         const moveDetail = {
@@ -77,99 +65,113 @@ const Details = () => {
       setMoveDetails(allMoveDetails)
     }
     fetchMoveDetails();
-  }, [selectedPokemon.moves])
+  }, [searchPoke.moves])
 
+const Wave1 = () => (
+  <div
+    style={{
+      fontFamily: "Pokemon Solid",
+      color: "#ffc107",
+      fontSize: "50px",
+      textShadow:
+        "2px 0 #000000, -2px 0 #000000, 0 2px #000000, 0 -2px #000000,1px 1px #000000, -1px -1px #000000, 1px -1px #000000, -1px 1px #000000",
+    }}
+  >
+    <Wave
+      text={capString(searchPoke.name)}
+      effect="fadeOut"
+      effectChange={6.0}
+    />
+
+    <div></div>
+  </div>
+);
 
   return (
-    <div className={selectedPokemon.types[0].type.name}>
+    <div style={{backgroundColor: getColorForType(searchPoke.types[0].type.name)}}>
       <link
         href="https://fonts.cdnfonts.com/css/pokemon-solid"
         rel="stylesheet"
       />
       <button
-        className="pokemon-button btn btn-dark "
+        className="pokemon-button btn btn-dark"
         style={{ float: "Left" }}
-        onClick={returnToMarket}
+        onClick={returnToShinyMarket}
       >
-        Back to Pokémon Black Market
+        Back to Shiny Pokémon Black Market
       </button>
-      <Row className={selectedPokemon.types[0].type.name}>
-        <Col xs={4} style={{ textAlign: "center" }}>
-          <h1 style={{ fontFamily: "Pokemon Solid", marginTop: "110px" }}>{capString(selectedPokemon.name)}</h1>
-          <h4>${priceOfPokemon(selectedPokemon.stats)}</h4>
-          <h6>Height: {selectedPokemon.height / 10} m | Weight: {selectedPokemon.weight / 10} kg</h6>
-          <h6>Type: {selectedPokemon.types.map(pokeType => capString(pokeType.type.name)).join(" / ")}</h6>
+      <Row className={searchPoke.types[0].type.name}>
+        <Col xs={4} style={{textAlign: 'center'}}>
+          <Wave1 />
+          <h4>${priceOfPokemon(searchPoke.stats) * 1000}</h4>
+          <h6>Height: {searchPoke.height / 10} m | Weight: {searchPoke.weight / 10} kg</h6>
+          <h6>Type: {searchPoke.types.map(pokeType => capString(pokeType.type.name)).join(" / ")}</h6>
           <button className="btn btn-dark my-2 btn-sm"
                   style={{ marginRight: "5px", fontWeight: 500 }}
-                  onClick={async () => {
-              // await setSelectedUrl(
-              //   `https://pokeapi.co/api/v2/pokemon/${selectedPokemon.name}`
-              // );
-              navigate(`/pokemon/shiny/${selectedPokemon.name}`);
-            }}>
-            Shiny Poké ✨
-            </button>
-
+                  onClick={() => {
+                  navigate(`/pokemon/${searchPoke.name}`);
+          }}>
+            Normal Version 🥱
+           </button> 
           <button
             onClick={() => {
-              handleAddToCart(selectedPokemon);
+              handleShinyAddToCart(searchPoke);
               console.log("clicked on Add to Cart");
             }}
             className="btn btn-dark my-2 btn-sm"
             style={{ marginRight: "5px", fontWeight: 500 }}
-             >
+          >
             Add to Cart
           </button>
-        
-         <button
-        onClick={() => {
-          handleAddToFavorites(selectedPokemon);
-        }}
-        className="btn btn-dark my-2 btn-sm"
-        style={{ fontWeight: 500 }}
-      >
-        Add to Favorites
-      </button>
+          <button
+            onClick={() => {
+              handleShinyAddToFavorites(searchPoke);
+            }}
+            className="btn btn-dark my-2 btn-sm"
+            style={{ fontWeight: 500 }}
+          >
+            Add to Favorites
+          </button>
         </Col>
         <Col xs={4}>
           <CardMedia style={{ width: "300px", height: "300px", marginLeft: "55px" }}>
             <img
               height="155px"
               src={selectedImage}
-              alt={`{selectedPokemon.name} front`}
+              alt={`{searchPoke.name} front`}
               style={{ width: "300px", height: "300px", objectFit: "contain" }}            />
           </CardMedia>
         </Col>
-        <Col xs={4} style={{ marginTop: "40px", background: getColorForType(selectedPokemon.types[0].type.name)}}>
-          <Card style={{ marginBottom: "50px", width: '100px', height: '100px', background: getColorForType(selectedPokemon.types[0].type.name)}}
-                onClick={() => setSelectedImage(selectedPokemon.sprites.other["showdown"].front_default)}
+        <Col xs={4} style={{ marginTop: "40px", background: getColorForType(searchPoke.types[0].type.name)}}>
+          <Card style={{ marginBottom: "50px", width: '100px', height: '100px', background: getColorForType(searchPoke.types[0].type.name)}}
+                onClick={() => setSelectedImage(searchPoke.sprites.other["showdown"].front_shiny)}
           >
             <CardMedia style={{border: "1px solid black"}}>
               <img
-                src={selectedPokemon.sprites.other["showdown"].front_default}
-                alt={`${selectedPokemon.name} back`}
+                src={searchPoke.sprites.other["showdown"].front_shiny}
+                alt={`${searchPoke.name} back`}
                 style={{ width: "100px", height: "100px", objectFit: "contain" }}              />
             </CardMedia>
           </Card>
           <Card
-            onClick={() => setSelectedImage(selectedPokemon.sprites.other["showdown"].back_default)}
-            style={{width: '100px', height: '100px', background: getColorForType(selectedPokemon.types[0].type.name)}}
+            onClick={() => setSelectedImage(searchPoke.sprites.other["showdown"].back_shiny)}
+            style={{width: '100px', height: '100px', background: getColorForType(searchPoke.types[0].type.name)}}
           >
             <CardMedia style={{border: "1px solid black"}}>
               <img
-                src={selectedPokemon.sprites.other["showdown"].back_default}
-                alt={`${selectedPokemon.name} back`}
+                src={searchPoke.sprites.other["showdown"].back_shiny}
+                alt={`${searchPoke.name} back`}
                 style={{ width: "100px", height: "100px", objectFit: "contain" }}
               />
             </CardMedia>
           </Card>
         </Col>
       </Row>
-      <Row className={selectedPokemon.types[0].type.name}
+      <Row className={searchPoke.types[0].type.name}
            style={{ marginTop: "35px" }}
       >
         <Col xs={12} style={{textAlign: 'center'}}>
-          <h4 style={{ marginLeft: "15px" }}>{capString(selectedPokemon.name)}'s Moveset:</h4>
+          <h4 style={{ marginLeft: "15px" }}>{capString(searchPoke.name)}'s Moveset:</h4>
           {
             moveDetails.length > 0 ?
             <Row>
@@ -229,8 +231,8 @@ const Details = () => {
           }
         </Col>
       </Row>
-     </div> 
+    </div>
   );
 }
 
-export default Details;
+export default ShinySearchPage;

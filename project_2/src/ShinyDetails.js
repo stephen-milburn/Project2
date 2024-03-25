@@ -17,18 +17,22 @@ const ShinyDetails = () => {
           selectedImage,
           moveDetails,
           setMoveDetails,
-          getColorForType } = useContext(DetailsContext);
+          getColorForType,
+          handleShinyAddToCart,
+          handleShinyAddToFavorites } = useContext(DetailsContext);
   // const [ selectedPoke, setSelectedPoke ] = useState(() => {
   //   const savedInfo = localStorage.getItem('selectedPoke');
   //   return savedInfo ? JSON.parse(savedInfo) : {};
   // })
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSelectedPokemon = async () => {
         let response = await fetch(selectedUrl);
         let data = await response.json();
         console.log(data);
-        // localStorage.setItem('selectedPokemon', JSON.stringify(data));
+        localStorage.setItem('selectedPokemon', JSON.stringify(data));
     }
     fetchSelectedPokemon();
   }, [selectedUrl]);
@@ -60,7 +64,16 @@ const ShinyDetails = () => {
   }, [selectedPokemon.moves])
 
 const Wave1 = () => (
-  <div style={{ fontFamily: "Pokemon Solid", color: "#ffc107", fontSize:"50px"}}>
+  <div
+    style={{
+      marginTop: "110px",
+      fontFamily: "Pokemon Solid",
+      color: "#ffc107",
+      fontSize: "50px",
+      textShadow:
+        "2px 0 #000000, -2px 0 #000000, 0 2px #000000, 0 -2px #000000,1px 1px #000000, -1px -1px #000000, 1px -1px #000000, -1px 1px #000000",
+    }}
+  >
     <Wave
       text={capString(selectedPokemon.name)}
       effect="fadeOut"
@@ -90,6 +103,32 @@ const Wave1 = () => (
           <h4>${priceOfPokemon(selectedPokemon.stats) * 1000}</h4>
           <h6>Height: {selectedPokemon.height / 10} m | Weight: {selectedPokemon.weight / 10} kg</h6>
           <h6>Type: {selectedPokemon.types.map(pokeType => capString(pokeType.type.name)).join(" / ")}</h6>
+          <button className="btn btn-dark my-2 btn-sm"
+                  style={{ marginRight: "5px", fontWeight: 500 }}
+                  onClick={() => {
+                  navigate(`/pokemon/${selectedPokemon.name}`);
+          }}>
+            Normal Poké 🥱
+           </button> 
+          <button
+            onClick={() => {
+              handleShinyAddToCart(selectedPokemon);
+              console.log("clicked on Add to Cart");
+            }}
+            className="btn btn-dark my-2 btn-sm"
+            style={{ marginRight: "5px", fontWeight: 500 }}
+          >
+            Add to Cart
+          </button>
+          <button
+            onClick={() => {
+              handleShinyAddToFavorites(selectedPokemon);
+            }}
+            className="btn btn-dark my-2 btn-sm"
+            style={{ fontWeight: 500 }}
+          >
+            Add to Favorites
+          </button>
         </Col>
         <Col xs={4}>
           <CardMedia style={{ width: "300px", height: "300px", marginLeft: "55px" }}>

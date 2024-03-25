@@ -11,16 +11,34 @@ const DetailsProvider = ({ children}) => {
     const [ loading, setLoading ] = useState(true);
     const [ url, setUrl ] = useState(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=0`);
     const [ path, setPath ] = useState(0);
-    const [ selectedPokemon, setSelectedPokemon ] = useState({});
+    const [ selectedPokemon, setSelectedPokemon ] = useState(() => {
+      const savedInfo = localStorage.getItem('selectedPokemon');
+      return savedInfo ? JSON.parse(savedInfo) : {};
+    })    
     const [ searchInput, setSearchInput ] = useState("");
     const [ searchedUrl, setSearchedUrl] = useState(``);
-    const [ pokemonCart, setPokemonCart ] = useState([]);
+    const [ pokemonCart, setPokemonCart ] = useState([])
+    //   () => {
+    //   const savedInfo = localStorage.getItem('pokemonCart');
+    //   return savedInfo ? JSON.parse(savedInfo) : {};
+    // })  
     const [ selectedUrl, setSelectedUrl ] = useState('');
-    const [ favorites, setFavorites ] = useState([]);
-    const [ shinyPokemonCart, setShinyPokemonCart ] = useState([]);
-    const [ shinyFavorites, setShinyFavorites ] = useState([]);
+    const [ favorites, setFavorites ] = useState(() => {
+      const savedInfo = localStorage.getItem('favorites');
+      return savedInfo ? JSON.parse(savedInfo) : {};
+    })    
+    const [ shinyPokemonCart, setShinyPokemonCart ] = useState([])
+    //   () => {
+    //   const savedInfo = localStorage.getItem('shinyPokemonCart');
+    //   return savedInfo ? JSON.parse(savedInfo) : {};
+    // })  
+    const [ shinyFavorites, setShinyFavorites ] = useState(() => {
+      const savedInfo = localStorage.getItem('shinyFavorites');
+      return savedInfo ? JSON.parse(savedInfo) : {};
+    })  
     const [ selectedImage, setSelectedImage ] = useState('');
     const [ moveDetails, setMoveDetails ] = useState([]);
+    const [ purchasedPokemon, setPurchasedPokemon] = useState([])
 
     const getColorForType = (type) => {
         switch (type) {
@@ -128,13 +146,27 @@ const DetailsProvider = ({ children}) => {
     }
 
     const handleShinyRemoveFromCart = (pokemonToRemove) => {
-        const updatedCart = shinyPokemonCart.filter((pokemon) => pokemon.name !== pokemonToRemove.name);
-        setShinyPokemonCart(updatedCart)
+      let pokemonRemoved = false;
+      const updatedCart = shinyPokemonCart.filter((pokemon) => {
+        if (pokemon.name === pokemonToRemove.name && !pokemonRemoved) {
+          pokemonRemoved = true //sets the first instance of the same pokemon to true
+          return false; //excludes the first instance from the updated cart
+        }
+        return true; //ensures all other pokemon are not removed
+      })
+    setShinyPokemonCart(updatedCart);
     }
     
     const handleRemoveFromCart = (pokemonToRemove) => {
-        const updatedCart = pokemonCart.filter((pokemon) => pokemon.name !== pokemonToRemove.name);
-        setPokemonCart(updatedCart)
+        let pokemonRemoved = false;
+        const updatedCart = pokemonCart.filter((pokemon) => {
+          if (pokemon.name === pokemonToRemove.name && !pokemonRemoved) {
+            pokemonRemoved = true //sets the first instance of the same pokemon to true
+            return false; //excludes the first instance from the updated cart
+          }
+          return true; //ensures all other pokemon are not removed
+        })
+      setPokemonCart(updatedCart);
     }
 
     const handleAddToFavorites = (pokemon) => {
@@ -237,6 +269,8 @@ const DetailsProvider = ({ children}) => {
                                               getColorForType,
                                               moveDetails,
                                               setMoveDetails,
+                                              purchasedPokemon,
+                                              setPurchasedPokemon
                                             }}
             >
             {
